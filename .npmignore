@@ -1,0 +1,10 @@
+src
+dist/__tests__
+tsconfig.json
+tsconfig.tsbuildinfo
+jest.config.json
+.prettierrc
+.eslintrc
+.github
+CHANGELOG.md
+*.log

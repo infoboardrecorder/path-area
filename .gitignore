@@ -1,0 +1,23 @@
+# API keys and secrets
+.env*
+
+# Dependency directory
+node_modules
+
+# Editors
+.idea
+.vscode
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+tsconfig.tsbuildinfo
+
+# Build mash
+*-debug.log
+*-error.log
+
+dist/
+*.code-workspace
+coverage/
