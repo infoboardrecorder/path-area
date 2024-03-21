@@ -1,0 +1,47 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release_helper:
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.release.outputs.release_created }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+
+  release:
+    needs: release_helper
+    if: ${{ needs.release_helper.outputs.release }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          always-auth: true
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@infoboardrecorder'
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
