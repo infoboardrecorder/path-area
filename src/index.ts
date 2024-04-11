@@ -1,5 +1,6 @@
 import geohash from 'ngeohash';
 
+// Coordinates are in [longitude, latitude] format
 export type Coordinates = [number, number];
 
 export class PathArea {
@@ -12,6 +13,7 @@ export class PathArea {
    * @param start [longitude, latitude]
    * @param end [longitude, latitude]
    * @returns distance in meters
+   * @returns {Coordinates[]} - An array of interpolated coordinates.
    */
   public distance(start: Coordinates, end: Coordinates): number {
     const R = 6371e3; // Earth's radius in meters
@@ -27,10 +29,11 @@ export class PathArea {
   }
 
   /**
-   * Interpolate coordinates between two
-   * @param start [longitude, latitude]
-   * @param end [longitude, latitude]
-   * @returns coordinates including start but no end
+   * Interpolates coordinates between two points.
+   *
+   * @param {Coordinates} start - The starting coordinates.
+   * @param {Coordinates} end - The ending coordinates.
+   * @returns {Coordinates[]} - An array of interpolated coordinates.
    */
   private interpolatePath(start: Coordinates, end: Coordinates): Coordinates[] {
     const coordinates: Coordinates[] = [];
@@ -41,7 +44,7 @@ export class PathArea {
     }
 
     const totalDistance = this.distance(start, end);
-    const numPoints = Math.ceil(totalDistance / this.spacing); // include start but exclude end points
+    const numPoints = Math.max(2, Math.ceil(totalDistance / this.spacing));
 
     const latDiff = end[1] - start[1];
     const lngDiff = end[0] - start[0];
@@ -60,29 +63,30 @@ export class PathArea {
   }
 
   /**
-   * Get interpolated path
-   * @param coordinates [longitude, latitude][]
-   * @returns [longitude, latitude][]
+   * Calculates the path coordinates between a series of given coordinates.
+   *
+   * @param {Coordinates[]} coordinates - An array of coordinates to calculate the path.
+   * @returns {Coordinates[]} - An array of path coordinates.
    */
   public coordinates(coordinates: Coordinates[]): Coordinates[] {
-    let pathCoordinates: Coordinates[] = [];
+    if (coordinates.length < 2) return [...coordinates];
+
+    const pathCoordinates: Coordinates[] = [coordinates[0]];
 
     for (let i = 0; i < coordinates.length - 1; i++) {
-      const path = this.interpolatePath(coordinates[i], coordinates[i + 1]);
-      pathCoordinates = [...pathCoordinates, ...path];
+      // drop the first coordinate as it's already added
+      const [, ...path] = this.interpolatePath(coordinates[i], coordinates[i + 1]);
+      pathCoordinates.push(...path);
     }
-
-    // add the last coordinate missing from loop
-    const last = coordinates[coordinates.length - 1];
-    pathCoordinates.push(last);
 
     return pathCoordinates;
   }
 
   /**
+   * Generates geohashes from an array of coordinates.
    *
-   * @param coordinates [longitude, latitude][]
-   * @returns geohash[]
+   * @param {Coordinates[]} coordinates - The array of coordinates.
+   * @return {Set<string>} - A Set of geohashes generated from the coordinates.
    */
   public geohashes(coordinates: Coordinates[]): Set<string> {
     const output = new Set<string>();
@@ -99,8 +103,7 @@ export class PathArea {
   }
 
   /**
-   *
-   * @param coordinates [longitude, latitude]
+   * Calculate area of path
    * @returns m²
    */
   public area(coordinates: Coordinates[]): number {

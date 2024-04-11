@@ -14,15 +14,16 @@ describe('PathArea', () => {
     pathArea = new PathArea();
   });
 
-  test('Generate geohashes from coordinates and speed', () => {
+  test('Generate geohashes from coordinates', () => {
     const geohashes = pathArea.geohashes(data);
     expect(geohashes.size).toEqual(136);
   });
 
   test('Generate path coordinates', () => {
     const coordinates = pathArea.coordinates(data);
+
     expect(Array.isArray(coordinates)).toBeTruthy();
-    expect(coordinates.length).toEqual(172);
+    expect(coordinates.length).toEqual(168);
 
     expect(coordinates[0][1]).toEqual(48.97409857459967);
     expect(coordinates[0][0]).toEqual(14.473332850127251);
@@ -61,7 +62,7 @@ describe('PathArea', () => {
     ];
 
     const coordinates = pathArea.coordinates(data2);
-    expect(coordinates.length).toEqual(3);
+    expect(coordinates.length).toEqual(2);
   });
 
   test('Compute distance', () => {
