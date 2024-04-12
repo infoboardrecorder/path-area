@@ -1,10 +1,11 @@
-import geohash from 'ngeohash';
+import hull from 'hull.js';
+import ngeohash from 'ngeohash';
 
 // Coordinates are in [longitude, latitude] format
 export type Coordinates = [number, number];
 
 export class PathArea {
-  private areaSq = 22.7529; // 4.77m x 4.77m
+  public readonly areaSq = 14.98084045960135;
   private precision = 9;
   private spacing = 3; // meters
 
@@ -112,5 +113,52 @@ export class PathArea {
   public area(coordinates: Coordinates[]): number {
     const geohashes = this.geohashes(coordinates);
     return this.computeArea(geohashes);
+  }
+
+  /**
+   *
+   * Converts geohash to coordinates
+   * @returns {Coordinates[]} - An array of coordinates at each corner.
+   */
+  private geohashToCorners(geohash: string): Coordinates[] {
+    const bbox = ngeohash.decode_bbox(geohash);
+
+    return [
+      [bbox[1], bbox[0]], // bottom left corner
+      [bbox[3], bbox[0]], // bottom right corner
+      [bbox[3], bbox[2]], // top right corner
+      [bbox[1], bbox[2]], // top left corner
+    ];
+  }
+
+  /**
+   *
+   * @param {Set<string>} geohashes - A Set of geohashes to generate polygon from.
+   * @param {number} concavity
+   * @returns {Coordinates[]} - An array of polygon coordinates.
+   */
+  public generatePolygon(geohashes: Set<string>, concavity: number = 0.00000000001): Coordinates[] {
+    let coordinates: ReturnType<PathArea['geohashToCorners']> = [];
+
+    geohashes.forEach((geohash) => {
+      coordinates = coordinates.concat(this.geohashToCorners(geohash));
+    });
+
+    const output = hull(coordinates, concavity) as Coordinates[];
+
+    return output.map((point) => {
+      return point;
+    });
+  }
+
+  /**
+   *
+   * @param {Coordinates[]} coordinates - The array of coordinates.
+   * @param {number} concavity
+   * @returns {Coordinates[]} - An array of polygon coordinates.
+   */
+  public polygon(coordinates: Coordinates[], concavity: number = 0.00000000001): Coordinates[] {
+    const geohashes = this.geohashes(coordinates);
+    return this.generatePolygon(geohashes, concavity);
   }
 }

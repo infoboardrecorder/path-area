@@ -16,9 +16,11 @@
   "author": "Pavel Sláma <info@pavelslama.cz>",
   "license": "GPL-3.0",
   "dependencies": {
+    "hull.js": "^1.0.5",
     "ngeohash": "^0.6.3"
   },
   "devDependencies": {
+    "@types/hull.js": "^1.0.4",
     "@types/jest": "^29.5.12",
     "@types/ngeohash": "^0.6.8",
     "@typescript-eslint/eslint-plugin": "^7.3.1",

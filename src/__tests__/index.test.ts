@@ -73,4 +73,24 @@ describe('PathArea', () => {
     const distance = pathArea.distance(data3[0], data3[1]);
     expect(Math.round(distance)).toEqual(126);
   });
+
+  test('Generate polygon from geohashes', () => {
+    const geohashes = new Set<string>(['u2dq977nz', 'u2dq977qb', 'u2dq977q8']);
+    const result = pathArea.generatePolygon(geohashes);
+
+    expect(Array.isArray(result)).toBeTruthy();
+    expect(result.length).toBe(9);
+  });
+
+  test('Generate polygon from coordinates', () => {
+    const data4: Coordinates[] = [
+      [14.473435878753662, 48.97411108016968],
+      [14.4734787940979, 48.97411108016968],
+      [14.4734787940979, 48.97406816482544],
+    ];
+    const result = pathArea.polygon(data4);
+
+    expect(Array.isArray(result)).toBeTruthy();
+    expect(result.length).toBe(9);
+  });
 });
