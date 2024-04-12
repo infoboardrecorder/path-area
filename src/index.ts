@@ -44,7 +44,7 @@ export class PathArea {
     }
 
     const totalDistance = this.distance(start, end);
-    const numPoints = Math.max(2, Math.ceil(totalDistance / this.spacing));
+    const numPoints = Math.max(2, Math.round(totalDistance / this.spacing));
 
     const latDiff = end[1] - start[1];
     const lngDiff = end[0] - start[0];
@@ -69,8 +69,6 @@ export class PathArea {
    * @returns {Coordinates[]} - An array of path coordinates.
    */
   public coordinates(coordinates: Coordinates[]): Coordinates[] {
-    if (coordinates.length < 2) return [...coordinates];
-
     const pathCoordinates: Coordinates[] = [coordinates[0]];
 
     for (let i = 0; i < coordinates.length - 1; i++) {
@@ -92,12 +90,17 @@ export class PathArea {
     const output = new Set<string>();
 
     this.coordinates(coordinates).forEach((coordinate) => {
-      output.add(geohash.encode(coordinate[1], coordinate[0], this.precision));
+      output.add(ngeohash.encode(coordinate[1], coordinate[0], this.precision));
     });
 
     return output;
   }
 
+  /**
+   * Calculate area
+   * @param {Set<string>} geohashes - A Set of geohashes.
+   * @returns m²
+   */
   public computeArea(geohashes: Set<string>): number {
     return geohashes.size * this.areaSq;
   }
