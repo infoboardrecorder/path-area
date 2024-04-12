@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/infoboardrecorder/path-area/compare/v1.1.0...v1.1.1) (2024-04-12)
+
+
+### Bug Fixes
+
+* check for single/empty coordinates ([60b879a](https://github.com/infoboardrecorder/path-area/commit/60b879a2b40c6ab03fda217b88caea76d58acdb7))
+
 ## [1.1.0](https://github.com/infoboardrecorder/path-area/compare/v1.0.0...v1.1.0) (2024-04-12)
 
 
