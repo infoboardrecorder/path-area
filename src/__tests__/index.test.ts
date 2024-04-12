@@ -65,6 +65,26 @@ describe('PathArea', () => {
     expect(coordinates.length).toEqual(2);
   });
 
+  test('Empty coordinates', () => {
+    const points: Coordinates[] = [];
+
+    const coordinates = pathArea.coordinates(points);
+    expect(coordinates.length).toEqual(0);
+
+    const area = pathArea.area(points);
+    expect(area).toEqual(0);
+  });
+
+  test('Single coordinates', () => {
+    const points: Coordinates[] = [[14.473332850127251, 48.97409857459967]];
+
+    const coordinates = pathArea.coordinates(points);
+    expect(coordinates.length).toEqual(1);
+
+    const area = pathArea.area(points);
+    expect(area).toEqual(pathArea.areaSq);
+  });
+
   test('Compute distance', () => {
     const data3: Coordinates[] = [
       [14.473332850127251, 48.97409857459967],

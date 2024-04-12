@@ -70,6 +70,8 @@ export class PathArea {
    * @returns {Coordinates[]} - An array of path coordinates.
    */
   public coordinates(coordinates: Coordinates[]): Coordinates[] {
+    if (coordinates.length < 2) return [...coordinates];
+
     const pathCoordinates: Coordinates[] = [coordinates[0]];
 
     for (let i = 0; i < coordinates.length - 1; i++) {
