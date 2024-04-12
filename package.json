@@ -1,6 +1,6 @@
 {
   "name": "@infoboardrecorder/path-area",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Computes path area from coordinates",
   "main": "dist/index.js",
   "engines": {
